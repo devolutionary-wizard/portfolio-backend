@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
 import { Exception } from '../utils/exceptions';
 
-const errorMiddleware = (err: Exception, req: Request, res: Response, next: NextFunction) => {
+const errorMiddleware = (err: Exception, req: Request, res: Response, next: NextFunction): any => {
   try {
     const statusCode: number = err.statusCode || 500;
     const message: string = err.message || 'Internal Server Error';
