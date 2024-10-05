@@ -1,9 +1,10 @@
 import express, { Application } from "express";
-import { PORT } from "./constants";
+import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USERNAME, PORT } from "./constants";
 import { logger } from "./utils/logger";
 import IRoute from "./interface/route.interface";
 import UnknownEndpoint from "./controllers/unknown.controller";
 import errorMiddleware from "./middlewares/error.middleware";
+import { Database } from "./core/database";
 
 export default class App {
   private app: Application
@@ -15,6 +16,7 @@ export default class App {
     this.initializeRoutes(routes);
     this.initializeMiddlewares();
     this.handleUnknownEndpoint();
+    this.initializeDatabase();
     this.initializeGlobalErrorHandler();
   }
 
@@ -41,6 +43,17 @@ export default class App {
 
   private initializeGlobalErrorHandler() {
     this.app.use(errorMiddleware);
+  }
+
+  private async initializeDatabase(): Promise<void> {
+    await new Database({
+      dialect: 'postgres',
+      host: DB_HOST,
+      port: DB_PORT,
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_DATABASE,
+    }).connect();
   }
 
   public getServer(): Application {
