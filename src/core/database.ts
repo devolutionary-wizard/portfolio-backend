@@ -1,9 +1,11 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 import { DB } from "../interface/db.interface";
 import { logger } from "../utils/logger";
+import Project from "../models/project.model";
 
 class Database {
   private sequelize: Sequelize;
+
   constructor(db: DB) {
     this.sequelize = new Sequelize({
       dialect: db.dialect,
@@ -12,6 +14,7 @@ class Database {
       username: db.username,
       password: db.password,
       database: db.database,
+      models: [__dirname + '/../models'],
       logging: (msg) => logger.debug(msg),
     })
   }
